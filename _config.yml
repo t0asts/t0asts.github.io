@@ -1,25 +1,20 @@
 title: "t0asts' blog"
 description: "i post things sometimes"
+
+baseurl: ""
+url: "" 
+github_username:  t0asts
+author: t0asts
+
 #theme: "minima"
+markdown: kramdown
 remote_theme: jekyll/minima 
 minima:
   skin: dark
-
-kramdown:
-  syntax_highlighter_opts:
-    disable: true
+  social_links:
+    - title: GitHub
+      icon: github
+      url: "https://github.com/t0asts
     
 plugins:
   - jekyll-feed
-  - jekyll-sitemap
-
-titles_from_headings:
-  strip_title: true
-  collections: true
-
-defaults:
-  - scope:
-      path: ""
-      type: post
-    values:
-      tags: Other
