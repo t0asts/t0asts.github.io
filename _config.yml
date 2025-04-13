@@ -14,7 +14,7 @@ minima:
   social_links:
     - title: GitHub
       icon: github
-      url: "https://github.com/t0asts
+      url: "https://github.com/t0asts"
     
 plugins:
   - jekyll-feed
