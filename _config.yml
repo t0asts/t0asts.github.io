@@ -1,7 +1,9 @@
 title: "t0asts' blog"
-author: "t0asts"
 description: "i post things sometimes"
-theme: "minima"
+#theme: "minima"
+remote_theme: jekyll/minima 
+minima:
+  skin: dark
 
 kramdown:
   syntax_highlighter_opts:
