@@ -404,4 +404,4 @@ If I made any mistakes please let me know!
 ## Acknowledgment 
 
 Thanks to `REMOVED` for sharing the Global promo video with me!  
-Thanks to OALabs for HashDB!  
+Thanks to [OALabs](https://www.openanalysis.net/) for [HashDB](https://hashdb.openanalysis.net/)!  
