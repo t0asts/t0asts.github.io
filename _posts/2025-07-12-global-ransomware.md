@@ -93,7 +93,7 @@ This python snippet is a recreation of how the hash is generated from the API na
 def hash(data): 
     hash_value = 0x42
     for b in data:
-        hash_value = ((hash_value * 33) + b) & 0xFFFFFFFF  
+        hash_value = ((hash_value * 33) + b) & 0xFFFFFFFF
     return hash_value
 
 print("CreateMutexW = " + str(hash(b'CreateMutexW')))
