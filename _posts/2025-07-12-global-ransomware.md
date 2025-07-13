@@ -29,7 +29,7 @@
 
 In this post, I'm going over my analysis of a recent Global ransomware sample, a group that I only discovered when someone shared a [promotional video](https://xcancel.com/DarkWebInformer/status/1930273939025973744) they created with me. The video is oddly polished and visually almost resembles an advertisement Apple would release during a new product launch. They also boast about having support for ESXi systems and networked storage devices. There are some other bold claims, such as, one-click propagation across networks, "mount mode" (encrypting remote disks locally), "new attacks every single day", 85% revenue share, AI-powered negotiation support, and access to their platform on mobile devices. Affiliate groups are supposedly allowed to post on their leak site without intervention. The video alone made me curious about the capabilities of their "product" so that is how we arrived here.
 
-Post Analysis Note: The Global ransomware group operates utilizing the leaked Mamona ransomware builder (can be confirmed by the created mutex), which has ties to the Blacklock ransomware group also referred to "El Dorado" (before they were shut down by the DragonForce group). The DragonForce group utilizes the leaked Lockbit3.0 and ContiV3 variants (very original).
+Post Analysis Note: The Global ransomware group operates utilizing the leaked [Mamona ransomware](https://any.run/cybersecurity-blog/mamona-ransomware-analysis/) builder (can be confirmed by the created mutex), which has ties to the Blacklock ransomware group also referred to "El Dorado" (before they were shut down by the DragonForce group). The DragonForce group utilizes the leaked Lockbit3.0 and ContiV3 variants (very original).
 
 ## IOCs
 
