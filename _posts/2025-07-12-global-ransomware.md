@@ -54,28 +54,24 @@ Before opening the sample in IDA, I dropped it into DIE (Detect It Easy) to get 
 
 There was no obvious obfuscation, and it was unpacked. Loading the file in IDA and heading straight to the entry point, we see all the usual C runtime setup. We can skip past all of these to the actual main function.
 
-![EntryPoint](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/entrypoint.png)  
-
+![EntryPoint](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/entrypoint.png)  
 ***Figure 2: Entry Point***  
 
 Here is where the actual important execution starts.
 
-![MainFunction](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/mainstart.png)  
-
+![MainFunction](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/mainstart.png)  
 ***Figure 3: Main Function***  
 
 There are a handful of interesting flags that can be set on execution, `-log` can be passed to view the verbose event logging, `-detached` will forcibly detach the console window if the encryptor is run interactively, `-force` will bypass the mutex check which prevents multiple instances of the encryptor from running simultaneously to prevent double encryption of files.
 
 Interestingly enough, if `-detached` is not passed as an argument, the encryptor will attempt to relaunch and set the flag.
 
-![DetachConsole](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/detachconsole.png)  
-
+![DetachConsole](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/detachconsole.png)  
 ***Figure 4: Detach Console and Relaunch***  
 
 After executing in detached mode, the handles for standard in, out, and error are set to `NUL`.
 
 ![SetStdHandles](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/setstdhandle.png)  
-
 ***Figure 5: Set STDIN/STDOUT/STDERR to NUL***  
 
 ## API Resolution
@@ -83,7 +79,6 @@ After executing in detached mode, the handles for standard in, out, and error ar
 The encryptor then will continue setup by dynamically resolving APIs with a custom hashing algorithm.
 
 ![ResolveAPIs_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/resolveapis1.png)  
-
 ***Figure 6: Resolve APIs***  
 
 The `ResolveModule` function calculates module hashes by first walking the PEB module list (`InLoadOrderModuleList`), lowercasing the module name, stripping the path off the file name, hashing the module name, and comparing it to the target hash.
@@ -110,7 +105,6 @@ print("CreateMutexW = " + str(hash(b'CreateMutexW')))
 Once APIs have been resolved, the encryptor creates a mutex using the resolved `CreateMutexW` function.
 
 ![CreateMutex](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/createmutex.png)  
-
 ***Figure 7: Create Mutex***  
 
 ## Emptying Recycle Bin
@@ -118,15 +112,13 @@ Once APIs have been resolved, the encryptor creates a mutex using the resolved `
 Next, the recycle bin is cleared. This is the first of several steps to prevent recovery of encrypted files.
 
 ![ClearTrash](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/cleartrash.png)  
-
 ***Figure 8: Clear Recycle Bin***  
 
 ## Config Decryption
 
 The embedded config in the `.config` section is now decrypted. This config data contains the ransom note, victim unique ID, leak site URL, and the random value that will be used as the extension for encrypted files. Other runtime configuration options if present would be stored in this data as well.
 
-![DecryptedConfig](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/configdecrypt.png)  
-
+![DecryptedConfig](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/configdecrypt.png)  
 ***Figure 9: Decrypted Config***  
 
 The following python is a reimplementation of the decryption process.
@@ -167,7 +159,6 @@ def decrypt_data(encrypted_bytes):
 To successfully encrypt files, cryptographic context is acquired and a handle to a cryptographic service provider is returned. The `CRYPT_VERIFYCONTEXT` flag is used during context setup, which is typically only used by apps that leverage ephemeral keys, including apps that handle hashing, or encryption.
 
 ![CryptoSetup](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/setupcryptocontext.png)  
-
 ***Figure 10: Crypto Context Setup***  
 
 ## Custom File Icon Setup
@@ -175,29 +166,23 @@ To successfully encrypt files, cryptographic context is acquired and a handle to
 The embedded icon that will be applied as the file icon for encrypted files is base64 decoded, and dropped into the `temp` directory for all accessible users.
 
 ![FileIconSetup](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/fileiconinit.png)  
-
 ***Figure 11: File Icon Setup***  
 
 ![IconDataBase64](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/icondata.png)  
-
 ***Figure 12: Base64 Icon Data***  
 
 ![FileIconFromBase64_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/iconfrombase641.png)  
-
 ***Figure 13: File Icon Decode***  
 
 ![FileIconFromBase64_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/iconfrombase642.png)  
-
 ***Figure 14: File Icon Written***  
 
 ![FileIconPreview](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/extractedicon.png)  
-
 ***Figure 15: File Icon Preview***  
 
 Once the file icon is extracted and successfully dropped to disk, it is set as the associated file icon for encrypted files with the appended custom file extension.
 
 ![SetFileIcon](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/setfileicon.png)  
-
 ***Figure 16: Setting File Icon Association***  
 
 ## Print Ransom Note
@@ -205,29 +190,24 @@ Once the file icon is extracted and successfully dropped to disk, it is set as t
 Next, the encryptor will start the process of printing the ransom note to all networked printers accessible by the host, by creating a PDF version of the ransom note, which is never utilized during the print jobs (funny).
 
 ![CallPrintNote](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/printnote.png)  
-
 ***Figure 17: Setup and Run Ransom Note Print Job***  
 
 The PDF copy of the ransom note is named `PrintMe22.pdf` and is dropped in the current user's temp directory (still unused).
 
 ![CreatePDFNote](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/createpdf.png)  
-
 ***Figure 18: Location of PDF Ransom Note***  
 
 ![WritePDFData](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/writepdfdata.png)  
-
 ***Figure 19: Creation of PDF Ransom Note***  
 
 Networked printers are now enumerated.
 
 ![EnumPrinters](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/enumprinters.png)  
-
 ***Figure 20: Networked Printer Discovery***  
 
 For each printer identified, a handle is opened, a temporary file containing the content of the ransom note is dropped in the current user temp directory, and a print job is created, sending the content of the ransom note temp file to each printer.
 
 ![SendPrintJob](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/runprintjob.png)  
-
 ***Figure 21: Sending Note Print Job***  
 
 ## Clear Windows Event Log
@@ -235,7 +215,6 @@ For each printer identified, a handle is opened, a temporary file containing the
 Immediately after sending the print jobs, the encryptor will attempt to clear the history of several Windows event log sources. These being `Application`, `Security`, `System`, `Setup`, and `ForwardedEvents`
 
 ![ClearEventLogs](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/cleareventlog.png)  
-
 ***Figure 22: Clearing Event Logs***  
 
 ## Delete Shadow Copies
@@ -243,7 +222,6 @@ Immediately after sending the print jobs, the encryptor will attempt to clear th
 After wiping Windows event logs, `vssadmin` is executed by the encryptor in a crude attempt to delete all shadow copies, to hinder recovery efforts.
 
 ![DeleteShadowCopy](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/deleteshadowcopy.png)  
-
 ***Figure 23: Deleting Shadow Copies***  
 
 ## Token Elevation
@@ -251,11 +229,9 @@ After wiping Windows event logs, `vssadmin` is executed by the encryptor in a cr
 The encryptor will then attempt to adjust the token privileges of its process.
 
 ![AdjustTokenPrivs_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/adjtokenprivs1.png)  
-
 ***Figure 24: Adjust Process Token***  
 
 ![AdjustTokenPrivs_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/adjtokenprivs2.png)  
-
 ***Figure 25: Set Token Privileges***  
 
 ## Impersonate SYSTEM
@@ -263,15 +239,12 @@ The encryptor will then attempt to adjust the token privileges of its process.
 With elevated token privileges set, the encryptor will attempt to elevate to `NT AUTHORITY\SYSTEM` permissions by impersonating the token of the `winlogon.exe` process or the `TrustedInstaller` service/process if the first attempt to impersonate `winlogon` fails.
 
 ![ImpersonateToken](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/impersonatetoken.png)  
-
 ***Figure 26: Token Impersonation***  
 
 ![ImpersonateWinlogon](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/impersonatewinlogon.png)  
-
 ***Figure 27: Impersonate Winlogon***  
 
 ![ImpersonateTrustedInstaller](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/impersonatetrustedinstaller.png)  
-
 ***Figure 28: Impersonate TrustedInstaller***  
 
 ## Impair Defenses
@@ -279,13 +252,11 @@ With elevated token privileges set, the encryptor will attempt to elevate to `NT
 Now running as `SYSTEM`, the encryptor will attempt to stop and delete services related to Microsoft Defender, event logging, network inspection, and system integrity.
 
 ![StopSecurityServices](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/stopsecservices.png)  
-
 ***Figure 29: Impairing Security Services***  
 
 With security services stopped and deleted, any processes associated with those services or category of services are also terminated. The process token is then reverted to the original token.
 
 ![StopSecurityProcesses](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/stopsecprocesses.png)  
-
 ***Figure 30: Terminating Security Processes***  
 
 ## Enumerate Domain Devices
@@ -298,17 +269,14 @@ First, the list of devices in the domain is collected.
 ![QueryDomainComputer_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/querydomaincomp2.png)  
 ![QueryDomainComputer_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/querydomaincomp3.png)  
 ![QueryDomainComputer_4](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/querydomaincomp4.png)  
-
 ***Figure 31-34: Query Domain Computers***  
 
 A DNS query is performed on each device identified, and each IP successfully resolved is sent an ICMP echo request to identify hosts that are alive.
 
 ![ResolveDomainHostToIP](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/resolveip.png)  
-
 ***Figure 35: Resolve Domain Host IP***  
 
 ![PingHost](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/pinghost.png)  
-
 ***Figure 36: Ping Host***  
 
 ## Remote Execution
@@ -320,13 +288,11 @@ The encryptor binary is uploaded to the target host's `Temp` folder through the 
 ![ExecuteRemoteService_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/executeremoteservice3.png)  
 ![ExecuteRemoteService_4](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/executeremoteservice4.png)  
 ![ExecuteRemoteService_5](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/executeremoteservice5.png)  
-
 ***Figure 37-41: Upload and Execute as Service***  
 
 If service creation fails, a scheduled task is created to execute the uploaded encryptor binary.
 
 ![ExecuteRemoteTask](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/executeremotetask.png)  
-
 ***Figure 42: Execute as Scheduled Task***  
 
 ## Local Encryption Setup
@@ -334,13 +300,11 @@ If service creation fails, a scheduled task is created to execute the uploaded e
 Drives to be targeted for encryption are now identified.
 
 ![IdentifyDrives](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/identifydrives.png)  
-
 ***Figure 43: Identify Target Drives***  
 
 Two thread pools are created, one for local drive encryption, and one for remote drive encryption.
 
 ![CreateThreadPools](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/createthreadpool.png)  
-
 ***Figure 44: Thread Pool Creation***  
 
 ## Local Encryption Start
@@ -349,7 +313,6 @@ Encryption for local drives is started.
 
 ![LocalEncryptStart_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/localencgetdrives.png)  
 ![LocalEncryptStart_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/localencstart.png)  
-
 ***Figure 45-46: Local Encryption Job Start***
 
 First, a list of every drive letter on the target host is collected (again), and for each drive, the type is determined to prevent targeting of CD-ROM drives. Remaining applicable drives are checked once more to determine if they are accessible based on file attributes, and drives that fail this check are skipped. 
@@ -360,11 +323,9 @@ Each valid target file is renamed to include the ransomware custom extension, an
 
 ![LocalEncryptJob_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encdirectory1.png)  
 ![LocalEncryptJob_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encdirectory2.png)  
-
 ***Figure 47-48: Queue Target Files and Drop Note***  
   
 ![LocalEncryptJob_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encfiles1.png)  
-
 ***Figure 49: Local Encryption Job***  
 
 ## Remote Encryption Start
@@ -376,19 +337,15 @@ Alive neighboring devices are identified by sending ICMP echo requests to each I
 Files on shares are encrypted in batches, and once the last batch finishes, share connections are killed, and any shares mounted as local drives are unmounted.
 
 ![RemoteEncryptJob_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/getremotehosts.png)  
-
 ***Figure 50: Get Device Network and Domain Info***  
 
 ![RemoteEncryptJob_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/remoteencping.png)  
-
 ***Figure 51: Check if Target Alive***  
 
 ![RemoteEncryptJob_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/remoteencaddconn.png)  
-
 ***Figure 52: Add Connection***  
 
 ![RemoteEncryptJob_4](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/remoteencgetshares.png)  
-
 ***Figure 53: Enumerate Shares***  
 
 ## Set Desktop Wallpaper
@@ -396,11 +353,9 @@ Files on shares are encrypted in batches, and once the last batch finishes, shar
 The target host wallpaper is set, notifying the user of their demise, and the name of the ransom note.
 
 ![ResolveAPIs_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/resolveapis2.png)  
-
 ***Figure 54: Resolve More APIs***  
 
 ![SetWallpaper](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/setwallpaper.png)  
-
 ***Figure 55: Set Wallpaper***  
 
 ## Self Deletion
@@ -408,7 +363,6 @@ The target host wallpaper is set, notifying the user of their demise, and the na
 To cleanup, the encryptor will launch command prompt, have it ping `127.0.0.7`, giving the encryptor process just enough time to finish and close the handle to its mutex before the encryptor binary is deleted.
 
 ![SelfDelete](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/selfdelete.png)  
-
 ***Figure 56: Ping and Self Delete***  
 
 ## Acknowledgment 
