@@ -120,37 +120,70 @@ The embedded config in the `.config` section is now decrypted. This config data 
 ![DecryptedConfig](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/configdecrypt.png)  
 ***Figure 9: Decrypted Config***  
 
-The following python is a reimplementation of the decryption process.
+The following python script reimplements the decryption process, and can be used to extract the config section.
 
 ```python
-def decrypt_data(encrypted_bytes):
-    if len(encrypted_bytes) < 0x864:
-        encrypted_bytes = encrypted_bytes + b'\x00' * (0x864 - len(encrypted_bytes))
-    else:
-        encrypted_bytes = encrypted_bytes[:0x864]
-    
-    data_words = list(struct.unpack('<537I', encrypted_bytes))
-    
-    xor_key_current = ctypes.c_uint32(0x52D8FC7D)
-    xor_key_previous = ctypes.c_uint32(0x52D8FC7D)
-    xor_key_seed = ctypes.c_uint32(0x52D8FC7D)
-    
-    multiplier_constant = ctypes.c_int32(-1702134675)
-    xor_constant = 0x5E4F3D2C
-    
-    for word_index in range(0x219):
-        data_words[word_index] ^= xor_key_current.value
-        
-        rotated_value = ((xor_key_seed.value << 13) | (xor_key_previous.value >> 19)) & 0xFFFFFFFF
-        
-        new_xor_key = ctypes.c_uint32(multiplier_constant.value * rotated_value)
-        new_xor_key.value ^= xor_constant
-        
-        xor_key_current = new_xor_key
-        xor_key_previous = new_xor_key
-        xor_key_seed = new_xor_key
-    
-    return struct.pack('<537I', *data_words)
+#!/usr/bin/env python3
+
+import sys
+from pathlib import Path
+from array import array
+
+import pefile
+
+class ConfigDecryptor:
+    def __init__(self, pe_path: Path) -> None:
+        if not pe_path.exists():
+            raise FileNotFoundError(f"File not found: {pe_path}")
+        self.pe = pefile.PE(str(pe_path))
+
+    def extract_config_section(self) -> bytes:
+        for sec in self.pe.sections:
+            name = sec.Name.rstrip(b"\x00").decode(errors="ignore")
+            if name == ".config":
+                return sec.get_data()
+        raise RuntimeError(".config section not found")
+
+    def decrypt_data(self, data: bytes) -> bytes:
+        data = data[:len(data) // 4 * 4]
+        words = array('I')
+        words.frombytes(data)
+
+        xor_current = xor_prev = xor_seed = 0x52D8FC7D
+
+        for idx in range(len(words)):
+            words[idx] ^= xor_current
+            rot = ((xor_seed << 13) | (xor_prev >> 19)) & 0xFFFFFFFF
+            new_key = ((-1702134675 & 0xFFFFFFFF) * rot) & 0xFFFFFFFF
+            xor_current = xor_prev = xor_seed = new_key ^ 0x5E4F3D2C
+
+        return words.tobytes()
+
+    def process(self) -> None:
+        raw = self.extract_config_section()
+        print(f"Found .config section: {len(raw)} bytes")
+        decrypted = self.decrypt_data(raw)
+
+        output_file = Path("output.bin")
+        with output_file.open('wb') as f:
+            f.write(decrypted)
+        print(f"Decrypted configuration saved to: {output_file}")
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} <pe_file>")
+        sys.exit(1)
+
+    pe_file = Path(sys.argv[1])
+    try:
+        ConfigDecryptor(pe_file).process()
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
 ```
 
 ## Crypto Context Setup
@@ -364,8 +397,11 @@ To cleanup, the encryptor will launch command prompt, have it ping `127.0.0.7`, 
 ![SelfDelete](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/selfdelete.png)  
 ***Figure 56: Ping and Self Delete***  
 
+That's all Folks!  
+
+If I made any mistakes please let me know!  
+
 ## Acknowledgment 
 
-Thanks to `REMOVED` for sharing the Global promo video with me!
-
-
+Thanks to `REMOVED` for sharing the Global promo video with me!  
+Thanks to OALabs for HashDB!  
