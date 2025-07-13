@@ -46,12 +46,12 @@ The sample analyzed in this post is a 32-bit Windows executable.
 
 ## Initial Inspection
 
-Before opening the sample in IDA, I dropped it into DIE (Detect It Easy) to get an idea if I was going to be spending most of my time unpacking or deobfuscating the sample. This was NOT the case at all, as the affiliates behind this sample shipped a clean release build out the door.
+Before opening the sample in IDA, I dropped it into [DIE](https://github.com/horsicq/Detect-It-Easy) (Detect It Easy) to get an idea if I was going to be spending most of my time unpacking or deobfuscating the sample. This was NOT the case at all, as the affiliates behind this sample shipped a clean release build out the door.
 
 ![DIE](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/die.png)  
 ***Figure 1: Detect It Easy***  
 
-There was no obvious obfuscation, and it was unpacked. Loading the file in IDA and heading straight to the entry point, we see all the usual C runtime setup. We can skip past all of these to the actual main function.
+There was no obvious obfuscation, and it was unpacked. Loading the file in [IDA](https://hex-rays.com/) and heading straight to the entry point, we see all the usual C runtime setup. We can skip past all of these to the actual main function.
 
 ![EntryPoint](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/entrypoint.png)  
 ***Figure 2: Entry Point***  
