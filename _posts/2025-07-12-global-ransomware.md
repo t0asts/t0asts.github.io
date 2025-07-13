@@ -322,8 +322,8 @@ Each valid target file is renamed to include the ransomware custom extension, an
 
 ![LocalEncryptJob_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encdirectory1.png)  
 ![LocalEncryptJob_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encdirectory2.png)  
-***Figure 47-48: Queue Target Files and Drop Note***  
-  
+***Figure 47-48: Queue Target Files and Drop Note***  
+
 ![LocalEncryptJob_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encfiles1.png)  
 ***Figure 49: Local Encryption Job***  
 
