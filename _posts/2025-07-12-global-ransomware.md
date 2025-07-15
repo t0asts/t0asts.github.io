@@ -36,13 +36,13 @@ Post Analysis Note: The Global ransomware group operates utilizing the leaked [M
 
 The sample analyzed in this post is a 32-bit Windows executable.
 
-**Group Site:** hxxp://vg6xwkmfyirv3l6qtqus7jykcuvgx6imegb73hqny2avxccnmqt5m2id[.]onion
+**Group Site:** [hxxp://vg6xwkmfyirv3l6qtqus7jykcuvgx6imegb73hqny2avxccnmqt5m2id[.]onion](https://www.virustotal.com/gui/domain/vg6xwkmfyirv3l6qtqus7jykcuvgx6imegb73hqny2avxccnmqt5m2id.onion)
 
-**MD5:** c5a8d4c07e1dca5e9cfbbaadfc402063  
+**MD5:** [c5a8d4c07e1dca5e9cfbbaadfc402063](https://www.virustotal.com/gui/file/c5a8d4c07e1dca5e9cfbbaadfc402063)  
 
-**SHA-1:** c95056c8682373d0512aea2ed72c18f79c854308  
+**SHA-1:** [c95056c8682373d0512aea2ed72c18f79c854308](https://www.virustotal.com/gui/file/c95056c8682373d0512aea2ed72c18f79c854308)  
 
-**SHA-256:** 13b82f4ac62faf87a105be355c82bacfcbdd383050860dfa93dfbb7bb2e6c9ba 
+**SHA-256:** [13b82f4ac62faf87a105be355c82bacfcbdd383050860dfa93dfbb7bb2e6c9ba](https://www.virustotal.com/gui/file/13b82f4ac62faf87a105be355c82bacfcbdd383050860dfa93dfbb7bb2e6c9ba)  
 
 ## Initial Inspection
 
@@ -447,12 +447,12 @@ To cleanup, the encryptor will launch command prompt, have it ping `127.0.0.7`, 
 
 These are additional samples related to the Global Ransomware family:
 
-**SHA-256:** 1f6640102f6472523830d69630def669dc3433bbb1c0e6183458bd792d420f8e  
-**SHA-256:** 232f86e26ced211630957baffcd36dd3bcd6a786f3d307127e1ea9a8b31c199f  
-**SHA-256:** 28f3de066878cb710fe5d44f7e11f65f25328beff953e00587ffeb5ac4b2faa8  
-**SHA-256:** a8c28bd6f0f1fe6a9b880400853fc86e46d87b69565ef15d8ab757979cd2cc73  
-**SHA-256:** c5f49c0f566a114b529138f8bd222865c9fa9fa95f96ec1ded50700764a1d4e7  
-**SHA-256:** c7b91de4b4b10c22f2e3bca1e2603160588fd8fd829fd46103cf536b6082e310  
+**SHA-256:** [1f6640102f6472523830d69630def669dc3433bbb1c0e6183458bd792d420f8e](https://www.virustotal.com/gui/file/1f6640102f6472523830d69630def669dc3433bbb1c0e6183458bd792d420f8e)  
+**SHA-256:** [232f86e26ced211630957baffcd36dd3bcd6a786f3d307127e1ea9a8b31c199f](https://www.virustotal.com/gui/file/232f86e26ced211630957baffcd36dd3bcd6a786f3d307127e1ea9a8b31c199f)  
+**SHA-256:** [28f3de066878cb710fe5d44f7e11f65f25328beff953e00587ffeb5ac4b2faa8](https://www.virustotal.com/gui/file/28f3de066878cb710fe5d44f7e11f65f25328beff953e00587ffeb5ac4b2faa8)  
+**SHA-256:** [a8c28bd6f0f1fe6a9b880400853fc86e46d87b69565ef15d8ab757979cd2cc73](https://www.virustotal.com/gui/file/a8c28bd6f0f1fe6a9b880400853fc86e46d87b69565ef15d8ab757979cd2cc73)  
+**SHA-256:** [c5f49c0f566a114b529138f8bd222865c9fa9fa95f96ec1ded50700764a1d4e7](https://www.virustotal.com/gui/file/c5f49c0f566a114b529138f8bd222865c9fa9fa95f96ec1ded50700764a1d4e7)  
+**SHA-256:** [c7b91de4b4b10c22f2e3bca1e2603160588fd8fd829fd46103cf536b6082e310](https://www.virustotal.com/gui/file/c7b91de4b4b10c22f2e3bca1e2603160588fd8fd829fd46103cf536b6082e310)  
 
 ## Acknowledgment 
 
