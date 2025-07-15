@@ -22,8 +22,9 @@
 - [Remote Encryption Start](#remote-encryption-start)
 - [Set Desktop Wallpaper](#set-desktop-wallpaper)
 - [Self Deletion](#self-deletion)
+- [MITRE ATT&CK Mapping](#mitre-attck-mapping)
+- [Related Samples](#related-samples)
 - [Acknowledgment](#acknowledgment)
-
 
 ## Overview
 
@@ -42,7 +43,6 @@ The sample analyzed in this post is a 32-bit Windows executable.
 **SHA-1:** c95056c8682373d0512aea2ed72c18f79c854308  
 
 **SHA-256:** 13b82f4ac62faf87a105be355c82bacfcbdd383050860dfa93dfbb7bb2e6c9ba 
-
 
 ## Initial Inspection
 
@@ -397,11 +397,68 @@ To cleanup, the encryptor will launch command prompt, have it ping `127.0.0.7`, 
 ![SelfDelete](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/selfdelete.png)  
 ***Figure 56: Ping and Self Delete***  
 
+## MITRE ATT&CK Mapping
+
+- Collection (TA0009)  
+    - T1005: Data from Local System  
+- Defense Evasion (TA0005)  
+    - T1070: Indicator Removal  
+        - T1070.001: Clear Windows Event Logs  
+        - T1070.004: File Deletion  
+    - T1107: File Deletion  
+    - T1134: Access Token Manipulation  
+    - T1202: Indirect Command Execution  
+    - T1562: Impair Defenses  
+        - T1562.001: Disable or Modify Tools  
+- Discovery (TA0007)  
+    - T1007: System Service Discovery  
+    - T1016: System Network Configuration Discovery  
+    - T1057: Process Discovery  
+    - T1063: Security Software Discovery  
+    - T1082: System Information Discovery  
+    - T1083: File and Directory Discovery  
+    - T1135: Network Share Discovery  
+    - T1518: Software Discovery  
+        - T1518.001: Security Software Discovery  
+- Execution (TA0002)  
+    - T1053: Scheduled Task/Job  
+        - T1053.005: Scheduled Task  
+    - T1059: Command and Scripting Interpreter  
+    - T1106: Native API  
+    - T1129: Shared Modules  
+- Impact (TA0040)  
+    - T1486: Data Encrypted for Impact  
+    - T1489: Service Stop  
+    - T1490: Inhibit System Recovery  
+- Persistence (TA0003)  
+    - T1031: Modify Existing Service  
+    - T1053: Scheduled Task/Job  
+        - T1053.005: Scheduled Task  
+    - T1543: Create or Modify System Process  
+        - T1543.003: Windows Service  
+- Privilege Escalation (TA0004)  
+    - T1053: Scheduled Task/Job  
+        - T1053.005: Scheduled Task  
+    - T1134: Access Token Manipulation  
+    - T1543: Create or Modify System Process  
+        - T1543.003: Windows Service  
+
+## Related Samples 
+
+These are additional samples related to the Global Ransomware family:
+
+SHA-256 1f6640102f6472523830d69630def669dc3433bbb1c0e6183458bd792d420f8e  
+SHA-256 232f86e26ced211630957baffcd36dd3bcd6a786f3d307127e1ea9a8b31c199f  
+SHA-256 28f3de066878cb710fe5d44f7e11f65f25328beff953e00587ffeb5ac4b2faa8  
+SHA-256 a8c28bd6f0f1fe6a9b880400853fc86e46d87b69565ef15d8ab757979cd2cc73  
+SHA-256 c5f49c0f566a114b529138f8bd222865c9fa9fa95f96ec1ded50700764a1d4e7  
+SHA-256 c7b91de4b4b10c22f2e3bca1e2603160588fd8fd829fd46103cf536b6082e310  
+
+## Acknowledgment 
+
 That's all Folks!  
 
 If I made any mistakes please let me know!  
-
-## Acknowledgment 
 
 Thanks to `REMOVED` for sharing the Global promo video with me!  
 Thanks to [OALabs](https://www.openanalysis.net/) for [HashDB](https://hashdb.openanalysis.net/)!  
