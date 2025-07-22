@@ -1,3 +1,8 @@
+---
+layout: post
+title:  "Global Group: Ransomware-as-a-Service with AI-powered Negotiation"
+---
+
 ![Logo](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/Globallogo.png)
 
 - [Overview](#overview)
