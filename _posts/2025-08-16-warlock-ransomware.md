@@ -71,7 +71,7 @@ Next, the list of NTFS volumes is queried, and any volume that is unmapped is as
 
 ## Impair Defenses
 
-To prevent interference during the encryption process, backup software and security software services are stopped, starting with dependant services, and eventually the main list of target services. Services that are already stopped or pending shutdown are skipped to avoid infinite service control request looping.
+To prevent interference during the encryption process, backup software and security software services are stopped, starting with dependent services, and eventually the main list of target services. Services that are already stopped or pending shutdown are skipped to avoid infinite service control request looping.
 
 ![TargetServices](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/targetservices.png)  
 ***Figure 6: Targeted Services***  
@@ -80,7 +80,7 @@ To prevent interference during the encryption process, backup software and secur
 ![KillServices_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/killservices2.png)  
 ***Figures 7-8: Security and Backup Services Stopped***  
 
-With services terminated, processes related to security software, backup software, database software, and productivity software are also terminated. This serves to release file locks held by these processes, and to prevent interuption by AV or EDR software when encrypting files.
+With services terminated, processes related to security software, backup software, database software, and productivity software are also terminated. This serves to release file locks held by these processes, and to avoid interruption by AV or EDR software when encrypting files.
 
 ![TargetProcesses](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/targetprocesses.png)  
 ***Figure 9: Target Processes***  
@@ -127,7 +127,7 @@ For the remaining applicable drives, the directory structure is recursively walk
 ![EnumerateDirectory_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/enumdirectory2.png)  
 ***Figures 16-17: Walking Directory Structure***  
 
-In addition to drives, any accessible SMB shares are also enumerated and processed to ensure files on shares are also added to the batches for encryption.
+In addition to drives, any accessible SMB shares are enumerated and processed to ensure files on shares are also added to the batches for encryption.
 
 ![EnumerateShares](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/enumshares.png)  
 ***Figure 18: Enumerate Shares***  
