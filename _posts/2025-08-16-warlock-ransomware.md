@@ -3,7 +3,7 @@ layout: post
 title:  "Warlock Group: We're only here for SharePoint and the Lamborghinis"
 ---
 
-![Site](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/warlocksite.png)  
+![Site](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/warlocksite.png)  
 
 - [Overview](#overview)
 - [IOCs](#iocs)
@@ -40,52 +40,52 @@ The sample analyzed in this post is a 32-bit Windows console app executable.
 
 Getting started, I dropped the binary straight into [DIE](https://github.com/horsicq/Detect-It-Easy) (Detect It Easy) and lucky for me, this sample was NOT packed or obfuscated with a commercial software protector (presumably dropped by a loader or initial stage that is packed/obfuscated), so time to open it in [IDA](https://hex-rays.com/).
 
-![DIE](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/die.png)  
+![DIE](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/die.png)  
 ***Figure 1: Detect It Easy***  
 
 Skipping past the CRT setup to the main function, the first thing the ransomware does is detach the console window, to hide execution from the user (very subtle).
 
-![HideConsole](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/hideconsole.png)  
+![HideConsole](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/hideconsole.png)  
 ***Figure 2: Hide Console Window***  
 
 ## Safety Check
 
 The computer name is retrieved and checked against a hardcoded hostname (potentially to avoid infecting the developer or affiliates), but this build appears to have the placeholder hostname. If the hostname of the target system matches the whitelisted entry, execution is halted. If the hostname is unable to be retrieved, the hostname check is skipped.
 
-![WhitelistHostCheck](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/whitelisthostcheck.png)  
+![WhitelistHostCheck](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/whitelisthostcheck.png)  
 ***Figure 3: Whitelisted Host Check***  
 
 ## Emptying Recycle Bin
 
 The actual malicious code is now fired off now. First the shutdown priority is set to delay termination in the event of a system shutdown, and the system recycle bin is cleared silently (no confirmation, no progress indicator, no sound).
 
-![ShutdownParamClearBin](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/shutdownparamclearbin.png)  
+![ShutdownParamClearBin](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/shutdownparamclearbin.png)  
 ***Figure 4: Set Shutdown Params and Clear Recycle Bin***  
 
 ## Prepare Target Drives
 
 Next, the list of NTFS volumes is queried, and any volume that is unmapped is assigned one, so the ransomware can access and encrypt non-system drives for maximum impact.
 
-![MountVolumesToLetters](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/mountvolumestoletter.png)  
+![MountVolumesToLetters](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/mountvolumestoletter.png)  
 ***Figure 5: Mount Unmapped Volumes to Unused Drive Letters***  
 
 ## Impair Defenses
 
 To prevent interference during the encryption process, backup software and security software services are stopped, starting with dependent services, and eventually the main list of target services. Services that are already stopped or pending shutdown are skipped to avoid infinite service control request looping.
 
-![TargetServices](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/targetservices.png)  
+![TargetServices](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/targetservices.png)  
 ***Figure 6: Targeted Services***  
 
-![KillServices_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/killservices1.png)  
-![KillServices_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/killservices2.png)  
+![KillServices_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/killservices1.png)  
+![KillServices_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/killservices2.png)  
 ***Figures 7-8: Security and Backup Services Stopped***  
 
 With services terminated, processes related to security software, backup software, database software, and productivity software are also terminated. This serves to release file locks held by these processes, and to avoid interruption by AV or EDR software when encrypting files.
 
-![TargetProcesses](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/targetprocesses.png)  
+![TargetProcesses](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/targetprocesses.png)  
 ***Figure 9: Target Processes***  
 
-![KillProcesses](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/killprocesses.png)  
+![KillProcesses](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/killprocesses.png)  
 ***Figure 10: Security and Backup Processes Terminated***  
 
 ## WOW Check
@@ -96,14 +96,14 @@ If the ransomware process is running under `WOW64` (Windows-On-Windows 64), whic
 
 To hinder recovery efforts, all VSS snapshots are enumerated and forcibly deleted through `COM` instead of the much noisier `vssadmin` or `wmic` equivalents, to avoid leaving command line argument activity behind. 
 
-![DeleteVSSSnapshots](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/deletesnapshots.png)  
+![DeleteVSSSnapshots](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/deletesnapshots.png)  
 ***Figure 11: Disable WOW64 FS Redirection and Delete VSS Snapshots***  
 
 ## Worker Thread Setup
 
 Before encrypting files, the local processors on the target host are queried and multiplied by eight, to determine how many worker threads the ransomware will create.
 
-![CreateWorkers](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/createworkers.png)  
+![CreateWorkers](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/createworkers.png)  
 ***Figure 12: Create Worker Threads***  
 
 The worker threads will now wait for batches of target paths for encryption.
@@ -112,54 +112,54 @@ The worker threads will now wait for batches of target paths for encryption.
 
 Each drive mapped to a drive letter is queried for the drive type, to exclude those that are CD-ROM "drives" and any drives that point to an invalid volume, to avoid erroring out when processing paths for the worker threads.
 
-![QueryDriveType](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/querydrives.png)  
+![QueryDriveType](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/querydrives.png)  
 ***Figure 13: Query Drive Type***  
 
 For the remaining applicable drives, the directory structure is recursively walked starting from the root to create batches of files that will be handled by the worker threads for encryption. Any files or directories that match against hardcoded exclusion lists for extensions and path names will be skipped from being added to the file batches.
 
-![ExcludedItems](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/excludeditems.png)  
+![ExcludedItems](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/excludeditems.png)  
 ***Figure 14: Excluded Files and Directories***  
 
-![ExcludedExtensions](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/excludedextensions.png)  
+![ExcludedExtensions](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/excludedextensions.png)  
 ***Figure 15: Excluded Extensions***  
 
-![EnumerateDirectory_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/enumdirectory1.png)  
-![EnumerateDirectory_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/enumdirectory2.png)  
+![EnumerateDirectory_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/enumdirectory1.png)  
+![EnumerateDirectory_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/enumdirectory2.png)  
 ***Figures 16-17: Walking Directory Structure***  
 
 In addition to drives, any accessible SMB shares are enumerated and processed to ensure files on shares are also added to the batches for encryption.
 
-![EnumerateShares](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/enumshares.png)  
+![EnumerateShares](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/enumshares.png)  
 ***Figure 18: Enumerate Shares***  
 
 ## File Encryption Process
 
 For each batch of files (~50), worker threads begin the file encryption process. Each file in the batch is renamed to include `.x2anylock` trailing the original extension. If during the renaming process a file is locked, the offending process will be forcibly terminated.
 
-![AppendExtension_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/addextension1.png)  
-![AppendExtension_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/addextension2.png)  
+![AppendExtension_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/addextension1.png)  
+![AppendExtension_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/addextension2.png)  
 ***Figures 19-20: Append Group Extension***  
 
-![KillLockingProcess](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/terminatelockingprocess.png)  
+![KillLockingProcess](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/terminatelockingprocess.png)  
 ***Figure 21: Terminate Locking Processes***  
 
 Every file uses a per-file symmetric ChaCha key derived via X25519 elliptic curve Diffie-Hellman exchange between a newly generated ephemeral private key on the target host and an embedded 32 byte public key. The 32 byte shared secret is hashed using SHA-256 to produce the 32 byte content key. The 8 byte nonce is the first 8 bytes of SHA-256 (key). The file is then encrypted (either in place when `-e` is passed as an argument, or after appending the extension `.x2anylock`), and a footer containing the ephemeral public key + 16-byte hash result (`SHA-256(iv)[:16]`) + fixed 32 byte marker is appended so the decryptor can recompute the key for file recovery.
 
-![EncryptFiles_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encryptfiles1.png)  
-![EncryptFiles_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encryptfiles2.png)  
-![EncryptFiles_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encryptfiles3.png)  
-![EncryptFiles_4](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/encryptfiles4.png)  
+![EncryptFiles_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/encryptfiles1.png)  
+![EncryptFiles_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/encryptfiles2.png)  
+![EncryptFiles_3](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/encryptfiles3.png)  
+![EncryptFiles_4](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/encryptfiles4.png)  
 ***Figures 22-25: File Encryption***  
 
-![PublicKey](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/attackerpublickey.png)  
+![PublicKey](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/attackerpublickey.png)  
 ***Figure 26: Embedded Public Key***  
 
 ## Dropping Ransom Note
 
 The embedded ransom note is dropped alongside encrypted files throughout the duration of the process.
 
-![DropRansomNote_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/dropnote1.png)  
-![DropRansomNote_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_images/dropnote2.png)  
+![DropRansomNote_1](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/dropnote1.png)  
+![DropRansomNote_2](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/dropnote2.png)  
 ***Figures 27-28: Drop Ransom Note***  
 
 As the encryption for the file batches completes successfully, the worker threads will be killed off and the ransomware process is terminated.  
