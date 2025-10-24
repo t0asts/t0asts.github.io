@@ -3,7 +3,7 @@ layout: page
 title: Offsite
 ---
 
-##### Some of my other posts not hosted on this site can be found here.  
+Some of my other posts not hosted on this site can be found here.  
 
 ### SANS Internet Storm Center  
 
