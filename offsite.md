@@ -3,9 +3,9 @@ layout: page
 title: Offsite
 ---
 
-### Some of my other posts not hosted on this site can be found below.
+##### Some of my other posts not hosted on this site can be found here.  
 
-## SANS Internet Storm Center  
+### SANS Internet Storm Center  
 
 #### [Dissecting DarkGate: Modular Malware Delivery and Persistence as a Service](https://isc.sans.edu/diary/30700)  
 
