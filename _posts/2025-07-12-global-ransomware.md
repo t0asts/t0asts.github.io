@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Global Group: Ransomware-as-a-Service with AI-powered Negotiation"
+permalink: global-ransomware
 ---
 
 ![Logo](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/global/Globallogo.png)

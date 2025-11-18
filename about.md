@@ -3,4 +3,7 @@ layout: page
 title: About
 ---
 
-I post random findings and other research here.
+### Welcome!
+
+This blog will be home to my random findings and other research that I do in my freetime outside of work.
+

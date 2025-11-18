@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Warlock Group: We're only here for SharePoint and the Lamborghinis"
+permalink: warlock-ransomware
 ---
 
 ![Site](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/warlock/warlocksite.png)  
