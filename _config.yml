@@ -18,3 +18,4 @@ minima:
     
 plugins:
   - jekyll-feed
+  - jekyll-redirect-from
