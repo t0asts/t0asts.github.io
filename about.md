@@ -5,7 +5,7 @@ title: About
 
 ### Welcome!
 
-This blog will be home to my random findings and other research that I do in my freetime outside of work.
+I'm John, and this blog is home to research and other findings that I do in my spare time outside of work.
 
 #### Feel free to contact me!
 
