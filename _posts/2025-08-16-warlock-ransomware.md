@@ -194,8 +194,6 @@ Overall nothing new nothing special.
 
 ## Acknowledgment 
 
-That's all Folks!  
-
-If I made any mistakes please let me know!  
+Feedback and corrections are welcome.
 
 

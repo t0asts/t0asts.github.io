@@ -462,9 +462,7 @@ These are additional samples related to the Global Ransomware family:
 
 ## Acknowledgment 
 
-That's all Folks!  
-
-If I made any mistakes please let me know!  
+Feedback and corrections are welcome.
 
 Thanks to `REMOVED` for sharing the Global promo video with me!  
 Thanks to [OALabs](https://www.openanalysis.net/) for [HashDB](https://hashdb.openanalysis.net/)!  
