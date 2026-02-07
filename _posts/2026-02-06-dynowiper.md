@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "DynoWiper: From Russia with Love"
+permalink: dynowiper
 ---
 
 ![Grid](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/dynowiper/grid.png)  
