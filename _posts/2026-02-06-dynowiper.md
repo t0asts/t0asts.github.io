@@ -35,7 +35,7 @@ To start, I ran the binary straight through [DIE](https://github.com/horsicq/Det
 
 ## PRNG Setup
 
-Jumping right past the CRT setup to the `WinMain` function, Dynowiper first initializes a Mersenne Twister PRNG (MT19937) context, with the fixed seed value of 5489 and a state size of 624.
+Jumping right past the CRT setup to the `WinMain` function, DynoWiper first initializes a Mersenne Twister PRNG (MT19937) context, with the fixed seed value of 5489 and a state size of 624.
 
 ![WinMain](https://raw.githubusercontent.com/t0asts/t0asts.github.io/refs/heads/main/_media/dynowiper/mainfunc.png)  
 ***Figure 2: Main Function***  
