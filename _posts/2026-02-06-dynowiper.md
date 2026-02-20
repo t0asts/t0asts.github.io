@@ -123,4 +123,7 @@ For each applicable file, attributes are cleared with `SetFileAttributesW()`, an
     
 ## Acknowledgment 
 
-Feedback and corrections are welcome.
+Feedback and corrections are welcome.  
+
+Many thanks to the SANS ISC for crossposting my [analysis](https://isc.sans.edu/diary/32730)!
+
