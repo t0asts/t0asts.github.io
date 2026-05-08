@@ -34,7 +34,7 @@ The sample analyzed in this post is a 32-bit Windows console app executable.
 [hxxp://elqfbcx5nofwtqfookqml7ltx2g6q6tmddys6e25vgu3al2meim6cbqd[.]onion](https://www.virustotal.com/gui/url/31884aaf95592f1bd55d589916ef490e332c32dff722e536cea8e1331cfe5d8f)  
 [hxxp://zfytizegsze6uiswodhbaalyy5rawaytv2nzyzdkt3susbewviqqh7yd[.]onion](https://www.virustotal.com/gui/url/5e2420bf60f0d86f6483c85eb80214f13c061f455434ecba6612f89afb8b3ce3)  
 
-**SHA-256:**  
+**SHA-256:**
 [da8de7257c6897d2220cdf9d4755b15aeb38715807e3665716d2ee761c266fdb](https://www.virustotal.com/gui/file/da8de7257c6897d2220cdf9d4755b15aeb38715807e3665716d2ee761c266fdb)
 
 ## Initial Inspection

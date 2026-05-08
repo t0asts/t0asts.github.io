@@ -24,7 +24,7 @@ In this post I'm going over my analysis of DynoWiper, a wiper family that was di
 
 The sample analyzed in this post is a 32-bit Windows executable, and is version A of DynoWiper.
 
-**SHA-256**
+**SHA-256:**
 [835b0d87ed2d49899ab6f9479cddb8b4e03f5aeb2365c50a51f9088dcede68d5](https://www.virustotal.com/gui/file/835b0d87ed2d49899ab6f9479cddb8b4e03f5aeb2365c50a51f9088dcede68d5)
 
 ## Initial Inspection
